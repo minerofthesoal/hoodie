@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "B B",
+    "P P",
+    "W W"
+  ],
+  "key": {
+    "B": { "item": "minecraft:light_blue_wool" },
+    "P": { "item": "minecraft:pink_wool" },
+    "W": { "item": "minecraft:white_wool" }
+  },
+  "result": {
+    "id": "hoodie:trans_thigh_highs",
+    "count": 1
+  }
+}

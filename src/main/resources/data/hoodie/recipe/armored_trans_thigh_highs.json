@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "IHI",
+    "III"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "H": { "item": "hoodie:trans_thigh_highs" }
+  },
+  "result": {
+    "id": "hoodie:armored_trans_thigh_highs",
+    "count": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "hoodie-clientonly",
+  "version": "${version}",
+  "name": "Hoodie Mod (Client-Only Replacer)",
+  "description": "Client-side only mod that replaces all chestplate models with a black hoodie and all legging models with black tights. No server required!",
+  "authors": [
+    "Ray0ffire"
+  ],
+  "contact": {
+    "homepage": "https://github.com/minerofthesoal/hoodie",
+    "sources": "https://github.com/minerofthesoal/hoodie"
+  },
+  "license": "MIT",
+  "icon": "assets/hoodie-clientonly/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.ray0ffire.hoodie.clientonly.HoodieClientOnlyMod"
+    ]
+  },
+  "mixins": [
+    "hoodie-clientonly.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  },
+  "conflicts": {
+    "hoodie": "*"
+  }
+}

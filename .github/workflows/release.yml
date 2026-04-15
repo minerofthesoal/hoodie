@@ -1,0 +1,60 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build all mods
+        run: ./gradlew build :clientonly:build
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Hoodie Mod v${{ steps.version.outputs.VERSION }}"
+          body: |
+            ## Hoodie Mod v${{ steps.version.outputs.VERSION }}
+
+            ### Downloads
+            - **hoodie-mod** - Full mod with hoodies, thigh highs, tights, armored variants, and rain hood mechanic
+            - **hoodie-clientonly** - Client-side only mod that replaces all chestplate models with black hoodie and all legging models with black tights
+
+            ### Minecraft Compatibility
+            - Minecraft 1.21.1 (Fabric)
+
+            ### Features
+            - White & Black Hoodies (chestplate slot)
+            - Trans Flag Thigh Highs (leggings slot)
+            - Black Tights (leggings slot)
+            - Armored variants of all clothing items
+            - Automatic hood-up when it's raining
+            - Crafting recipes for all items
+          files: |
+            build/libs/hoodie-mod-*.jar
+            clientonly/build/libs/hoodie-clientonly-*.jar
+          draft: false
+          prerelease: false

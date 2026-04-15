@@ -1,0 +1,5 @@
+accessWidener v2 named
+
+# Access widener for hoodie mod
+# Allow access to armor rendering internals
+accessible class net/minecraft/client/render/entity/feature/ArmorFeatureRenderer

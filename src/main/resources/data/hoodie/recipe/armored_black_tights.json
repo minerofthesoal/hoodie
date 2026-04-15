@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "IHI",
+    "III"
+  ],
+  "key": {
+    "I": { "item": "minecraft:iron_ingot" },
+    "H": { "item": "hoodie:black_tights" }
+  },
+  "result": {
+    "id": "hoodie:armored_black_tights",
+    "count": 1
+  }
+}

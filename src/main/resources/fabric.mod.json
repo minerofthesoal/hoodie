@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "hoodie",
+  "version": "${version}",
+  "name": "Hoodie Mod",
+  "description": "Adds hoodies, thigh highs, and tights to Minecraft! Features automatic hood-up in rain and armored variants.",
+  "authors": [
+    "Ray0ffire"
+  ],
+  "contact": {
+    "homepage": "https://github.com/minerofthesoal/hoodie",
+    "sources": "https://github.com/minerofthesoal/hoodie"
+  },
+  "license": "MIT",
+  "icon": "assets/hoodie/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.ray0ffire.hoodie.HoodieMod"
+    ],
+    "client": [
+      "com.ray0ffire.hoodie.client.HoodieModClient"
+    ]
+  },
+  "mixins": [
+    "hoodie.mixins.json"
+  ],
+  "accessWidener": "hoodie.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

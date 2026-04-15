@@ -1,0 +1,59 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mc_version: ["1.21.1"]
+        java_version: ["21"]
+        include:
+          - mc_version: "1.21.1"
+            java_version: "21"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java_version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build main mod (MC ${{ matrix.mc_version }})
+        run: ./gradlew build
+
+      - name: Build client-only mod (MC ${{ matrix.mc_version }})
+        run: ./gradlew :clientonly:build
+
+      - name: Upload main mod artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hoodie-mod-mc${{ matrix.mc_version }}
+          path: build/libs/hoodie-mod-*.jar
+
+      - name: Upload client-only mod artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hoodie-clientonly-mc${{ matrix.mc_version }}
+          path: clientonly/build/libs/hoodie-clientonly-*.jar
+
+  # Additional version builds can be enabled by uncommenting and
+  # adjusting Fabric API/Yarn versions in gradle.properties:
+  #
+  # To build for MC 1.21.11:
+  #   Copy versions/1.21.11.properties values into gradle.properties
+  #
+  # To build for MC 26.1 (requires Java 25):
+  #   Copy versions/26.1.properties values into gradle.properties
+  #   Note: MC 26.1 is unobfuscated and uses Mojang mappings

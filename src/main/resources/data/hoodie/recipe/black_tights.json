@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "WLW",
+    "W W"
+  ],
+  "key": {
+    "S": { "item": "minecraft:string" },
+    "W": { "item": "minecraft:black_wool" },
+    "L": { "item": "minecraft:leather" }
+  },
+  "result": {
+    "id": "hoodie:black_tights",
+    "count": 1
+  }
+}

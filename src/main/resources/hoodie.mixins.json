@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.ray0ffire.hoodie.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "ArmorFeatureRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

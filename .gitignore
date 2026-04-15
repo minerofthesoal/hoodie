@@ -1,0 +1,30 @@
+# Gradle
+.gradle/
+build/
+clientonly/build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradle/wrapper/gradle-wrapper.properties
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+.metadata
+out/
+bin/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Fabric
+run/
+logs/
+
+# Texture generator (not needed at runtime)
+generate_textures.py

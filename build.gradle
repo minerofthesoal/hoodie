@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom'
     id 'maven-publish'
 }
 
@@ -15,11 +15,32 @@ repositories {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/hoodie.accesswidener")
+    // Access widener lives in the per-version overlay so it can be tweaked
+    // when Minecraft renames or removes a target class.
+    accessWidenerPath = file("versions/${project.minecraft_version}/src/main/resources/hoodie.accesswidener")
 }
 
 // Support both Yarn and Mojang mappings for version compatibility
 def mappingsType = project.findProperty('mappings_type') ?: 'yarn'
+
+// Version-specific source overlay support.
+// Files that touch the per-version Minecraft API (ModItems, ModArmorMaterials,
+// the right-click item classes, the mixins, etc.) live under
+// `versions/<mc_version>/src/main/java` and `.../resources`. The base
+// `src/main` only contains files that compile unchanged across every
+// supported MC version. The matching overlay is added as additional source
+// roots based on the active `minecraft_version`.
+def overlayDir = file("versions/${project.minecraft_version}")
+if (overlayDir.exists()) {
+    def overlayJava = file("${overlayDir}/src/main/java")
+    def overlayResources = file("${overlayDir}/src/main/resources")
+    if (overlayJava.exists()) {
+        sourceSets.main.java.srcDirs += [overlayJava]
+    }
+    if (overlayResources.exists()) {
+        sourceSets.main.resources.srcDirs += [overlayResources]
+    }
+}
 
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

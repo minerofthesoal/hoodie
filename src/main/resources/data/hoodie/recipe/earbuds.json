@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "W W",
+    "C C",
+    " R "
+  ],
+  "key": {
+    "W": { "item": "minecraft:white_wool" },
+    "C": { "item": "minecraft:string" },
+    "R": { "item": "minecraft:redstone" }
+  },
+  "result": {
+    "id": "hoodie:earbuds",
+    "count": 1
+  }
+}

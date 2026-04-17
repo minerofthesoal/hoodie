@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "LBL"
+  ],
+  "key": {
+    "L": { "item": "minecraft:leather" },
+    "B": { "item": "minecraft:black_wool" },
+    "S": { "item": "minecraft:string" }
+  },
+  "result": {
+    "id": "hoodie:black_sneakers",
+    "count": 1
+  }
+}

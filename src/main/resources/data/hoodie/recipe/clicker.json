@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " G ",
+    "RRR",
+    "RIR"
+  ],
+  "key": {
+    "G": { "item": "minecraft:gold_nugget" },
+    "R": { "item": "minecraft:redstone" },
+    "I": { "item": "minecraft:iron_nugget" }
+  },
+  "result": {
+    "id": "hoodie:clicker",
+    "count": 1
+  }
+}

@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.9-SNAPSHOT'
+    id 'fabric-loom'
 }
 
 version = "${project.mod_version}-clientonly"
@@ -18,6 +18,19 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+// Per-version overlay: same convention as the root project.
+def overlayDir = file("versions/${project.minecraft_version}")
+if (overlayDir.exists()) {
+    def overlayJava = file("${overlayDir}/src/main/java")
+    def overlayResources = file("${overlayDir}/src/main/resources")
+    if (overlayJava.exists()) {
+        sourceSets.main.java.srcDirs += [overlayJava]
+    }
+    if (overlayResources.exists()) {
+        sourceSets.main.resources.srcDirs += [overlayResources]
+    }
 }
 
 processResources {

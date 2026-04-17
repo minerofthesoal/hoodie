@@ -1,5 +1,7 @@
 package com.ray0ffire.hoodie.item;
 
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,9 +20,6 @@ public class ClickerItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
 
-        // Play a snappy click sound at the player's location.
-        // Server side plays for everyone except the user; client side plays for the user
-        // so they hear it instantly without server round-trip.
         float pitch = 1.6f + (world.getRandom().nextFloat() - 0.5f) * 0.1f;
         world.playSound(
                 world.isClient ? user : null,
@@ -30,7 +29,12 @@ public class ClickerItem extends Item {
                 0.6f, pitch
         );
 
-        user.getItemCooldownManager().set(this, 4);
+        if (!world.isClient) {
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 5 * 20, 0, true, false, true));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 5 * 20, 0, true, false, true));
+        }
+
+        user.getItemCooldownManager().set(this, 20 * 20);
         return TypedActionResult.success(stack, world.isClient());
     }
 }

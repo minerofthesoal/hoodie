@@ -1,5 +1,7 @@
 package com.ray0ffire.hoodie.item;
 
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.sound.SoundCategory;
@@ -23,7 +25,11 @@ public class ClickerItem extends Item {
                 SoundCategory.PLAYERS,
                 0.6f, pitch
         );
-        user.getItemCooldownManager().set(user.getStackInHand(hand), 4);
+        if (!world.isClient()) {
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 5 * 20, 0, true, false, true));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 5 * 20, 0, true, false, true));
+        }
+        user.getItemCooldownManager().set(user.getStackInHand(hand), 20 * 20);
         return ActionResult.SUCCESS;
     }
 }

@@ -4,57 +4,131 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version (without the leading v)"
+        required: true
+        default: "1.0.0"
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  # Build each MC version in parallel and collect the jars as artifacts.
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mc_version: "1.21.1"
+            java_version: "21"
+            props: "versions/1.21.1.properties"
+          - mc_version: "1.21.8"
+            java_version: "21"
+            props: "versions/1.21.8.properties"
+          - mc_version: "1.21.11"
+            java_version: "21"
+            props: "versions/1.21.11.properties"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
+      - name: Set up JDK ${{ matrix.java_version }}
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: ${{ matrix.java_version }}
           distribution: 'temurin'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build all mods
-        run: ./gradlew build :clientonly:build
+      - name: Apply version-specific properties (${{ matrix.mc_version }})
+        run: |
+          {
+            grep -E '^(mod_version|maven_group|archives_base_name)=' gradle.properties || true
+            echo
+            cat ${{ matrix.props }}
+          } > gradle.properties.new
+          mv gradle.properties.new gradle.properties
 
-      - name: Get version from tag
+      - name: Build main + clientonly (MC ${{ matrix.mc_version }})
+        run: ./gradlew build :clientonly:build --no-daemon
+
+      - name: Collect jars
+        run: |
+          mkdir -p out
+          cp build/libs/hoodie-mod-*.jar out/ 2>/dev/null || true
+          cp clientonly/build/libs/hoodie-clientonly-*.jar out/ 2>/dev/null || true
+          ls -la out/
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hoodie-mc${{ matrix.mc_version }}
+          path: out/*.jar
+          if-no-files-found: error
+
+  # Collect every version's jars and publish a single release.
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
         id: version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        run: |
+          if [ "${GITHUB_REF#refs/tags/}" != "$GITHUB_REF" ]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+            echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            echo "TAG=v${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Flatten artifacts into release/
+        run: |
+          mkdir -p release
+          find artifacts -name '*.jar' -exec cp {} release/ \;
+          ls -la release/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Hoodie Mod v${{ steps.version.outputs.VERSION }}"
+          tag_name: ${{ steps.version.outputs.TAG }}
+          name: "Hoodie Mod ${{ steps.version.outputs.TAG }}"
           body: |
-            ## Hoodie Mod v${{ steps.version.outputs.VERSION }}
+            ## Hoodie Mod ${{ steps.version.outputs.TAG }}
 
             ### Downloads
-            - **hoodie-mod** - Full mod with hoodies, thigh highs, tights, armored variants, and rain hood mechanic
-            - **hoodie-clientonly** - Client-side only mod that replaces all chestplate models with black hoodie and all legging models with black tights
+            Each Minecraft version ships two jars:
+            - **hoodie-mod-...+mcX.Y.Z.jar** — full mod (armor + items + recipes)
+            - **hoodie-clientonly-1.0.0-clientonly.jar** — client-only variant that reskins every chestplate as a black hoodie and every leggings as black tights (MC 1.21.1 / 1.21.8 only; 1.21.11's render pipeline is too divergent)
 
             ### Minecraft Compatibility
-            - Minecraft 1.21.1 (Fabric)
+            - Minecraft 1.21.1 (Fabric) — all features
+            - Minecraft 1.21.8 (Fabric) — all features
+            - Minecraft 1.21.11 (Fabric) — armor, new items and recipes; hood-up/rain effect and the clientonly replacer are disabled on this target
 
             ### Features
-            - White & Black Hoodies (chestplate slot)
-            - Trans Flag Thigh Highs (leggings slot)
-            - Black Tights (leggings slot)
-            - Armored variants of all clothing items
-            - Automatic hood-up when it's raining
-            - Crafting recipes for all items
+            - White & Black Hoodies (chestplate)
+            - Trans Flag Thigh Highs (leggings) — upper thigh shows player skin
+            - Black Tights (leggings)
+            - Armored variants of all clothing (iron-tier protection)
+            - 6 new armor pieces: White/Black Beanies (helmets), White/Black Sneakers + Combat Boots (boots), Cargo Pants (leggings)
+            - 3 new items: Clicker (plays a click sound on right-click), Smartphone, Coffee Cup (drinkable — Speed + Haste for 60s)
+            - Crafting recipes for everything
+            - Hood-up in rain (1.21.1 and 1.21.8)
           files: |
-            build/libs/hoodie-mod-*.jar
-            clientonly/build/libs/hoodie-clientonly-*.jar
+            release/*.jar
           draft: false
           prerelease: false

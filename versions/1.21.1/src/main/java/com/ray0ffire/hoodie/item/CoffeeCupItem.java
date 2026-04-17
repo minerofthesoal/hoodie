@@ -1,5 +1,6 @@
 package com.ray0ffire.hoodie.item;
 
+import com.ray0ffire.hoodie.CoffeeCrashTracker;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -36,8 +37,11 @@ public class CoffeeCupItem extends Item {
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity user) {
         if (!world.isClient) {
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 1200, 0));
-            user.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 1200, 0));
+            // Speed IV (amp 3) for 315s, Haste II (amp 1) for 354s (39s past the Speed).
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 315 * 20, 3));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 354 * 20, 1));
+            // Schedule the coffee crash for when Haste ends: Slowness I 15s + Mining Fatigue I 10s.
+            CoffeeCrashTracker.schedule(user.getUuid(), world.getTime() + 354L * 20L);
         }
         world.playSound(null, user.getX(), user.getY(), user.getZ(),
                 SoundEvents.ENTITY_GENERIC_DRINK, user.getSoundCategory(), 1.0f, 1.0f);

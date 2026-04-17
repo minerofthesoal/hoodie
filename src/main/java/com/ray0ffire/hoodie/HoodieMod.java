@@ -12,6 +12,7 @@ public class HoodieMod implements ModInitializer {
     public void onInitialize() {
         ModArmorMaterials.register();
         ModItems.register();
+        CoffeeCrashTracker.register();
         LOGGER.info("Hoodie Mod loaded! Stay cozy.");
     }
 }

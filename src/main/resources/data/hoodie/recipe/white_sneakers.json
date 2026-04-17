@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "LWL"
+  ],
+  "key": {
+    "L": { "item": "minecraft:leather" },
+    "W": { "item": "minecraft:white_wool" },
+    "S": { "item": "minecraft:string" }
+  },
+  "result": {
+    "id": "hoodie:white_sneakers",
+    "count": 1
+  }
+}

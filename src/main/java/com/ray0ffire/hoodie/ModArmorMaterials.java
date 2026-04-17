@@ -44,12 +44,42 @@ public class ModArmorMaterials {
             "armored_black_tights", "black_tights", () -> Ingredient.ofItems(Items.IRON_INGOT)
     );
 
+    // --- New cosmetic armor pieces ---
+    public static final RegistryEntry<ArmorMaterial> WHITE_BEANIE = registerCosmetic(
+            "white_beanie", () -> Ingredient.ofItems(Items.WHITE_WOOL)
+    );
+    public static final RegistryEntry<ArmorMaterial> BLACK_BEANIE = registerCosmetic(
+            "black_beanie", () -> Ingredient.ofItems(Items.BLACK_WOOL)
+    );
+    public static final RegistryEntry<ArmorMaterial> WHITE_SNEAKERS = registerLight(
+            "white_sneakers", () -> Ingredient.ofItems(Items.LEATHER)
+    );
+    public static final RegistryEntry<ArmorMaterial> BLACK_SNEAKERS = registerLight(
+            "black_sneakers", () -> Ingredient.ofItems(Items.LEATHER)
+    );
+    public static final RegistryEntry<ArmorMaterial> COMBAT_BOOTS = registerHeavy(
+            "combat_boots", () -> Ingredient.ofItems(Items.IRON_INGOT)
+    );
+    public static final RegistryEntry<ArmorMaterial> CARGO_PANTS = registerLight(
+            "cargo_pants", () -> Ingredient.ofItems(Items.LEATHER)
+    );
+
     private static RegistryEntry<ArmorMaterial> registerCosmetic(String name, Supplier<Ingredient> repair) {
         return registerMaterial(name, name, makeDefense(0, 0, 0, 0), 15, 0f, 0f, repair);
     }
 
     private static RegistryEntry<ArmorMaterial> registerArmored(String name, String textureName, Supplier<Ingredient> repair) {
         return registerMaterial(name, textureName, makeDefense(2, 5, 4, 2), 12, 0.5f, 0f, repair);
+    }
+
+    // Light armor (leather-tier): low defense
+    private static RegistryEntry<ArmorMaterial> registerLight(String name, Supplier<Ingredient> repair) {
+        return registerMaterial(name, name, makeDefense(1, 2, 3, 1), 15, 0f, 0f, repair);
+    }
+
+    // Heavy armor (iron-tier): higher defense
+    private static RegistryEntry<ArmorMaterial> registerHeavy(String name, Supplier<Ingredient> repair) {
+        return registerMaterial(name, name, makeDefense(2, 5, 6, 2), 9, 0.5f, 0.05f, repair);
     }
 
     private static EnumMap<ArmorItem.Type, Integer> makeDefense(int boots, int leggings, int chest, int helmet) {

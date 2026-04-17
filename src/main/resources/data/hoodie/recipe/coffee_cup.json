@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PPP",
+    "PCP",
+    " S "
+  ],
+  "key": {
+    "P": { "item": "minecraft:paper" },
+    "C": { "item": "minecraft:cocoa_beans" },
+    "S": { "item": "minecraft:sugar" }
+  },
+  "result": {
+    "id": "hoodie:coffee_cup",
+    "count": 1
+  }
+}

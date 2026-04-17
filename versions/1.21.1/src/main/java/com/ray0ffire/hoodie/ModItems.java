@@ -2,6 +2,7 @@ package com.ray0ffire.hoodie;
 
 import com.ray0ffire.hoodie.item.ClickerItem;
 import com.ray0ffire.hoodie.item.CoffeeCupItem;
+import com.ray0ffire.hoodie.item.EarbudsItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
@@ -80,8 +81,8 @@ public class ModItems {
     public static final Item CLICKER = register(
             "clicker", new ClickerItem(new Item.Settings().maxCount(1))
     );
-    public static final Item PHONE = register(
-            "phone", new Item(new Item.Settings().maxCount(1))
+    public static final Item EARBUDS = register(
+            "earbuds", new EarbudsItem(new Item.Settings().maxCount(1))
     );
     public static final Item COFFEE_CUP = register(
             "coffee_cup", new CoffeeCupItem(new Item.Settings().maxCount(16))
@@ -123,7 +124,7 @@ public class ModItems {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.add(CLICKER);
-            entries.add(PHONE);
+            entries.add(EARBUDS);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
